@@ -1,2 +1,2 @@
 # tic-tac-toe
-Tic Taco Toe game made with JS
+Tic Tac Toe game made with JS
