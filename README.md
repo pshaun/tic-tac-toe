@@ -3,6 +3,8 @@ A simple game of Tic-Tac-Toe made with Javascript.
 
 Play against a not so smart computer as your opponent. 
 
+A better computer AI will be added later.
+
 # Demo: https://pshaun.github.io/tic-tac-toe/
 
 # Screenshots: 
