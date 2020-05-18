@@ -62,34 +62,69 @@ function playMove(event){
             
         }
     } else{
-        console.table("Can't make move");
+        console.log("Can't make move");
+        console.log("P1 turn = " + playerOne.currentTurn);
+        console.log("")
     } 
 }
 
 function playComputerMove(){
+    //messy comp AI for testing purposes, need to rework later
     if(playerTwo.currentTurn){
-        while(playerTwo.currentTurn){
-            var randMove = Math.floor(Math.random() * 9);
-            if(gameboardArr[randMove] == ""){
-                gameboardArr[randMove] = "O";
-                moveCount++;
-                document.querySelectorAll('.tile').forEach(function(element) {
-                    const tile = element.getAttribute('data-index');
-                    if(tile == randMove){
-                        element.textContent = "O";
-                        console.log("Playing 'O' at " + randMove);
-                    }
-                });
-                playerOne.currentTurn = !playerOne.currentTurn;
-                playerTwo.currentTurn = !playerTwo.currentTurn;
-            } else {
-                randMove = Math.floor(Math.random() * 9);
+        var arr = gameboardArr;
+        var computerTile = "";
+        for(var i = 0; i<winningRows.length; i++){
+            var innerArrayLength = winningRows[i].length;
+            for(var j = 0; j<innerArrayLength; j++){    
+                    if(arr[winningRows[i][0]] === arr[winningRows[i][1]] && arr[winningRows[i][1]] != "" && arr[winningRows[i][2]] === ""){
+                        
+                        computerTile = winningRows[i][2];
+                        console.log("1 Ai chooses = " + computerTile);
+                        break;
+                    } else if (arr[winningRows[i][0]] === arr[winningRows[i][2]] && arr[winningRows[i][2]] != "" && arr[winningRows[i][1]] === ""){
+                        
+                        computerTile = winningRows[i][1];
+                        console.log("2 Ai chooses = " + computerTile);
+                        break;
+                    } else if (arr[winningRows[i][1]] === arr[winningRows[i][2]] && arr[winningRows[i][2]] != "" && arr[winningRows[i][0]] === ""){
+                        
+                        computerTile = winningRows[i][0];
+                        console.log("3 Ai chooses = " + computerTile);
+                        break;
+                    } 
+                }
             }
+            if(computerTile == ""){
+                while(playerTwo.currentTurn){
+                    console.log("AI Playing rand move");
+                    var computerTile = Math.floor(Math.random() * 9);
+                    if(gameboardArr[computerTile] == ""){
+                        computerTile = computerTile;
+                        playerTwo.currentTurn = !playerTwo.currentTurn;
+                        
+                    } else {
+                        randMove = Math.floor(Math.random() * 9);
+                    }
+                }
+            }
+            playerOne.currentTurn = true;
+            playerTwo.currentTurn = false;
+            document.querySelectorAll('.tile').forEach(function(element) {
+                const tile = element.getAttribute('data-index');
+                if(tile == computerTile){
+                    element.textContent = "O";
+                    
+                }
+            });
+            console.log("Playing 'O' at " + computerTile);
+            gameboardArr[computerTile] = "O";
+            moveCount++;
+            checkBoard(gameboardArr);
+            console.table(gameboardArr);
+            console.log("");
+            
         }
-        checkBoard(gameboardArr);
     }
-    
-}
 
 const winningRows = [
     [0,1,2],
@@ -147,6 +182,7 @@ function checkBoard(arr){
     }
     
     gameFinished = true;
+    console.log("Game finished");
 
  }
 
