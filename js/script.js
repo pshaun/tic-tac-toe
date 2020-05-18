@@ -36,7 +36,6 @@ function createBoard(arr){
 
 function generateTile(item, index){
     const tile = document.createElement('div');
-    console.log("Test = " + item);
     tile.textContent = item;
     tile.addEventListener('click', playMove);
     tile.setAttribute('data-index', index);
@@ -47,24 +46,48 @@ function generateTile(item, index){
 
 function playMove(event){
     const index = event.target.getAttribute('data-index');
-    console.log("Playing this move at " + index);
-
-    if(gameboardArr[index] === "" && !gameFinished){
-        if(playerOne.currentTurn){
-            event.target.textContent = "X";
-            gameboardArr[index] = "X";
-        }else{
-            event.target.textContent = "O";
-            gameboardArr[index] = "O";
-        }
+    if(playerOne.currentTurn && gameboardArr[index] === "" && !gameFinished){
+        const index = event.target.getAttribute('data-index');
+        console.log("Playing 'X' at " + index);
+        event.target.textContent = "X";
+        gameboardArr[index] = "X";
         moveCount++;
         playerOne.currentTurn = !playerOne.currentTurn;
         playerTwo.currentTurn = !playerTwo.currentTurn;
         checkBoard(gameboardArr);
+        if(!gameFinished){
+            setTimeout(function(){
+                playComputerMove();
+            }, 700); 
+            
+        }
     } else{
-    console.table("Can't make move");
-    }
+        console.table("Can't make move");
+    } 
+}
 
+function playComputerMove(){
+    if(playerTwo.currentTurn){
+        while(playerTwo.currentTurn){
+            var randMove = Math.floor(Math.random() * 9);
+            if(gameboardArr[randMove] == ""){
+                gameboardArr[randMove] = "O";
+                moveCount++;
+                document.querySelectorAll('.tile').forEach(function(element) {
+                    const tile = element.getAttribute('data-index');
+                    if(tile == randMove){
+                        element.textContent = "O";
+                        console.log("Playing 'O' at " + randMove);
+                    }
+                });
+                playerOne.currentTurn = !playerOne.currentTurn;
+                playerTwo.currentTurn = !playerTwo.currentTurn;
+            } else {
+                randMove = Math.floor(Math.random() * 9);
+            }
+        }
+        checkBoard(gameboardArr);
+    }
     
 }
 
@@ -130,9 +153,7 @@ function checkBoard(arr){
  function highlightRow(winningRow, winColor){
     document.querySelectorAll('.tile').forEach(function(element) {
         const tile = element.getAttribute('data-index');
-        console.log("Tile test = " + tile);
         if(tile == winningRow[0] || tile == winningRow[1] || tile == winningRow[2]){
-            console.log("Change color of " + tile);
             element.style.color = winColor;
         }
     });
@@ -156,4 +177,6 @@ function checkBoard(arr){
     createBoard(gameboardArr);
     moveCount = 0;
     gameFinished = false;
+    playerOne.currentTurn = true;
+    playerTwo.currentTurn = false;
   });
